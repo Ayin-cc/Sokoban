@@ -4,27 +4,28 @@ import pygame
     游戏开始菜单
     0. 开始新游戏
     1. 选择地图
-    2. 设置
-    3. 关于
-    4. 退出
+    2. 关于
+    3. 退出
 '''
 class Menu:
     def __init__(self, screen):
         self.screen = screen
-        self.menu_options = ["开始新游戏", "选择地图", "选项", "游戏介绍", "退出游戏"]
+        self.menu_options = ["开始新游戏", "选择地图", "游戏介绍", "退出游戏"]
         self.selected_option = 0
         font_name = pygame.font.match_font('fangsong')
-        self.font = pygame.font.Font(font_name, 74)
-        self.small_font = pygame.font.Font(font_name, 50)
+        self.font = pygame.font.Font(font_name, 74)  # 标题字体
+        self.small_font = pygame.font.Font(font_name, 50)  # 选项字体
         self.title_text = self.font.render("推箱子", True, (255, 255, 255))
 
-    # 显示
-    def display_menu(self):
+    def display(self):
+        # 清空屏幕
         self.screen.fill((0, 0, 0))
+        # 渲染标题
         self.screen.blit(self.title_text, (800 // 2 - self.title_text.get_width()//2, 100))
+
         # 加载菜单图标
         menu_images = []
-        for i in range(5):
+        for i in range(4):
             image = pygame.image.load(f"assets/image/menu{i}.png")
             menu_images.append(image)
 

@@ -5,6 +5,7 @@ from settings import CLOCK
 from app.menu import Menu
 from app.map_selection import MapSelection
 from app.game_core import GameCore
+from app.about import About
 
 def main():
     # 初始化
@@ -20,6 +21,7 @@ def main():
     menu = Menu(screen)
     map_selection = MapSelection(screen)
     game_core = GameCore(screen)
+    about = About(screen)
 
     current_state = "menu"
     while True:
@@ -34,8 +36,6 @@ def main():
                     current_state = "game"
                 elif selection == "选择地图":
                     current_state = "map_selection"
-                elif selection == "选项":
-                    current_state = "options"
                 elif selection == "游戏介绍":
                     current_state = "about"
                 elif selection == "退出游戏":
@@ -47,21 +47,20 @@ def main():
             elif current_state == "game":
                 # 处理游戏核心模块的事件
                 game_core.handle_events(event)
-            elif current_state == "options":
-                # 游戏设置
-                print("options")
-                current_state = "menu"
             elif current_state == "about":
-                # 游戏介绍
-                print("about")
-                current_state = "menu"
+                # 处理游戏介绍模块的事件
+                current_state = about.handle_events(event)
 
+        # 渲染帧画面
         if current_state == "menu":
-            menu.display_menu()
+            menu.display()
         elif current_state == "map_selection":
-            map_selection.display_maps()
+            map_selection.display()
         elif current_state == "game":
-            game_core.run_game()
+            game_core.run()
+        elif current_state == "about":
+            about.display()
+            
 
 
 if __name__ == "__main__":
