@@ -10,7 +10,7 @@ import pygame
 class Menu:
     def __init__(self, screen):
         self.screen = screen
-        self.menu_options = ["开始新游戏", "选择地图", "游戏介绍", "退出游戏"]
+        self.menu_options = ["开始游戏", "选择地图", "游戏介绍", "退出游戏"]
         self.selected_option = 0
         font_name = pygame.font.match_font('fangsong')
         self.font = pygame.font.Font(font_name, 74)  # 标题字体
@@ -21,7 +21,7 @@ class Menu:
         # 清空屏幕
         self.screen.fill((0, 0, 0))
         # 渲染标题
-        self.screen.blit(self.title_text, (800 // 2 - self.title_text.get_width()//2, 100))
+        self.screen.blit(self.title_text, (500 // 2 - self.title_text.get_width()//2, 50))
 
         # 加载菜单图标
         menu_images = []
@@ -36,8 +36,8 @@ class Menu:
             else:
                 color = (255, 255, 255)
             option_text = self.small_font.render(option, True, color)
-            self.screen.blit(menu_images[index], (600 // 2 - 40, 260 + index * 60))
-            self.screen.blit(option_text, (600 // 2, 250 + index * 60))
+            self.screen.blit(menu_images[index], (310 // 2 - 40, 190 + index * 60))
+            self.screen.blit(option_text, (310 // 2, 185 + index * 60))
 
         pygame.display.flip()
 
