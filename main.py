@@ -17,7 +17,6 @@ def main():
     pygame.display.set_caption("推箱子")
     # 帧数
     clock = pygame.time.Clock()
-    clock.tick(CLOCK)
 
     menu = Menu(screen)
     map_selection = MapSelection(screen)
@@ -66,29 +65,31 @@ def main():
                 if selection == "主菜单":
                     current_state = "menu"
 
-            # 渲染帧画面
-            if current_state == "menu":
-                menu.display()
-            elif current_state == "map_selection":
-                map_selection.display()
-            elif current_state == "game":
-                if not init_map:
-                    game_core.target_positions.clear()
-                    if map_selection.map_selected == 0:
-                        game_core.setMap(load_map(CURRENT_MAP))
-                        map_selection.column = 1
-                        map_selection.pack_selecting = False
-                        map_selection.pack_selected = 0
-                        map_selection.map_selected = 1
+        # 渲染帧画面
+        if current_state == "menu":
+            menu.display()
+        elif current_state == "map_selection":
+            map_selection.display()
+        elif current_state == "game":
+            if not init_map:
+                game_core.target_positions.clear()
+                if map_selection.map_selected == 0:
+                    game_core.setMap(load_map(CURRENT_MAP))
+                    map_selection.column = 1
+                    map_selection.pack_selecting = False
+                    map_selection.pack_selected = 0
+                    map_selection.map_selected = 1
+                else:
+                    if map_selection.pack_selected == 0:
+                        game_core.setMap(map_selection.default_maps[map_selection.map_selected - 1])
                     else:
-                        if map_selection.pack_selected == 0:
-                            game_core.setMap(map_selection.default_maps[map_selection.map_selected - 1])
-                        else:
-                            game_core.setMap(map_selection.diy_maps[map_selection.map_selected - 2])
-                    init_map = True
-                game_core.display()
-            elif current_state == "about":
-                about.display()
+                        game_core.setMap(map_selection.diy_maps[map_selection.map_selected - 2])
+                init_map = True
+            game_core.display()
+        elif current_state == "about":
+            about.display()
+
+        clock.tick(CLOCK)
             
 
 

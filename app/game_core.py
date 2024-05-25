@@ -9,6 +9,8 @@ class GameCore:
         self.screen = screen
         self.game_images = []
         self.player = (0, 0)
+        self.steps = 0
+        self.start_ticks = pygame.time.get_ticks()
         self.obt_des = False
         self.box_obt_des = []
         self.dx = 0
@@ -18,12 +20,20 @@ class GameCore:
         self.target_positions = []
         font_name = pygame.font.match_font('fangsong')
         self.font = pygame.font.Font(font_name, 64) 
-        self.small_font = pygame.font.Font(font_name, 42)
+        self.small_font = pygame.font.Font(font_name, 26)
         for i in range(1, 7):
             image = pygame.image.load(f"assets/image/{i}.png")
             self.game_images.append(image)
 
+    def reset(self):
+        self.map = copy.deepcopy(self.origin_map)
+        self.obt_des = False
+        self.box_obt_des.clear()  
+        self.steps = 0
+        self.start_ticks = pygame.time.get_ticks()
+
     def setMap(self, map):
+        self.reset()
         self.origin_map = copy.deepcopy(map)
         self.map = copy.deepcopy(self.origin_map)
         # 将二维列表中所有目标点的位置保存到集合中
@@ -45,6 +55,12 @@ class GameCore:
                 y = 10 + 32 * i
                 self.screen.blit(self.game_images[ele - 1], (x, y))
 
+        # 底部信息
+        elapsed_ticks = (pygame.time.get_ticks() - self.start_ticks) / 1000
+        steps = self.steps
+        info = self.small_font.render(f"Time: {elapsed_ticks:.1f}s               Steps: {steps}", True, (255, 255, 255))
+        self.screen.blit(info, (20, 490))
+
         pygame.display.flip()
 
     def isWin(self):
@@ -64,9 +80,7 @@ class GameCore:
                         pygame.quit()
                         exit()
                     if event.type == pygame.KEYDOWN:
-                        self.map = copy.deepcopy(self.origin_map)
-                        self.obt_des = False
-                        self.box_obt_des.clear()  
+                        self.reset()
                         return "选择地图"
         return None
 
@@ -75,6 +89,7 @@ class GameCore:
         x = self.player[0] + self.dx
         y = self.player[1] + self.dy
         if x > 0 and x < 15 and y > 0 and y < 15:  # 可以移动
+            self.steps += 1
             if self.map[y][x] == '6' or self.map[y][x] == '4':  # 空白砖块或目标点
                 for i in range(1, 32):  # 逐帧渲染移动
                     tx = 10 + 32 * (x - self.dx) + i * self.dx
@@ -84,7 +99,7 @@ class GameCore:
                     else:
                         self.screen.blit(self.game_images[5], (10 + 32 * (x - self.dx), 10 + 32 * (y - self.dy)))
                     self.screen.blit(self.game_images[4], (tx, ty))
-                    time.sleep(0.5 / CLOCK)
+                    time.sleep(0.1 / CLOCK)
                     pygame.display.flip()
                 # 更新map
                 if self.obt_des:
@@ -110,7 +125,7 @@ class GameCore:
                         self.screen.blit(self.game_images[5], (10 + 32 * (x - self.dx), 10 + 32 * (y - self.dy)))
                     self.screen.blit(self.game_images[4], (tx, ty))
                     self.screen.blit(self.game_images[2], (tx + 32 * self.dx, ty + 32 * self.dy))
-                    time.sleep(0.5 / CLOCK)
+                    time.sleep(0.1 / CLOCK)
                     pygame.display.flip()
                 # 更新map
                 if self.obt_des:
@@ -150,13 +165,9 @@ class GameCore:
                 self.dy = 0
                 return self.move()
             if event.key == pygame.K_p:  # 重新开始
-                self.map = copy.deepcopy(self.origin_map)
-                self.obt_des = False
-                self.box_obt_des.clear()  
+                self.reset()
                 return None
             if event.key == pygame.K_m:  # 返回菜单
-                self.map = copy.deepcopy(self.origin_map)
-                self.obt_des = False
-                self.box_obt_des.clear()  
+                self.reset()
                 return "主菜单"
         return None
